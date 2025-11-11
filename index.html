@@ -7,8 +7,16 @@
     <style>
         /* Estilos básicos para que se vea ordenado */
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 450px; }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            width: 100%; 
+            max-width: 450px; 
+        }
         h2 { text-align: center; color: #333; }
+        h3 { color: #007bff; margin-top: 25px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
         input[type="text"], input[type="tel"], input[type="email"], input[type="password"], select {
             width: 100%;
@@ -16,7 +24,7 @@
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+            box-sizing: border-box; 
         }
         button {
             width: 100%;
@@ -27,80 +35,111 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 10px; /* Separación para botones */
         }
         button:hover { background-color: #0056b3; }
         .toggle-link { text-align: center; margin-top: 15px; }
-        .hidden { display: none; }
+        .hidden { display: none !important; } /* Usamos !important para asegurar que oculte */
     </style>
 </head>
 <body>
 
 <div class="container">
     
-    <div id="login-view">
-        <h2>🔑 Iniciar Sesión</h2>
-        <form id="loginForm">
-            <label for="login-email">Email:</label>
-            <input type="email" id="login-email" name="Email" required>
-
-            <label for="login-pass">Contraseña:</label>
-            <input type="password" id="login-pass" name="Pass" required>
-
-            <button type="submit">Iniciar Sesión</button>
-        </form>
-        
-        <p class="toggle-link">
-            ¿No tienes cuenta? 
-            <a href="#" onclick="showRegister()">Regístrate aquí</a>
+    <div id="welcome-view">
+        <h2>👋 Bienvenido(a)</h2>
+        <p>
+            Esta es la plataforma de <b>solicitud de materiales e insumos</b> habilitada por 
+            el <b>pañol del área de Electricidad, Automatización y Robótica</b>, un espacio dedicado 
+            a la gestión y entrega de herramientas, instrumentos de medición, componentes electrónicos, 
+            insumos y material didáctico para el desarrollo de clases y proyectos.
         </p>
+        
+        <h3>Consideraciones:</h3>
+        <ul>
+            <li>Todo material facilitado por pañol debe regresar en las mismas condiciones. 
+                Informe cualquier falla o incidente a la brevedad.</li>
+            <li>Como respaldo físico, los estudiantes deben entregar su <b>TNE</b> o 
+                <b>Cédula de Identidad vigente</b>, perteneciente al mismo alumno que realiza la solicitud.</li>
+            <li>Ante dudas o consultas, acercarse con el Director o Coordinador de Carrera.</li>
+        </ul>
+        
+        <button onclick="showLoginRegister()">Ingresar a la Plataforma</button>
     </div>
 
-    <hr>
-    
-    <div id="register-view" class="hidden">
-        <h2>📝 Nuevo Registro</h2>
-        <form id="registroForm">
+    <div id="auth-container" class="hidden">
+
+        <div id="login-view">
+            <h2>🔑 Iniciar Sesión</h2>
+            <form id="loginForm">
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" name="Email" required>
+
+                <label for="login-pass">Contraseña:</label>
+                <input type="password" id="login-pass" name="Pass" required>
+
+                <button type="submit">Iniciar Sesión</button>
+            </form>
             
-            <label for="nombre">Nombre Completo:</label>
-            <input type="text" id="nombre" name="Nombre" required>
+            <p class="toggle-link">
+                ¿No tienes cuenta? 
+                <a href="#" onclick="showRegister()">Regístrate aquí</a>
+            </p>
+        </div>
 
-            <label for="rut">RUT:</label>
-            <input type="text" id="rut" name="RUT" required>
-
-            <label for="carrera">Carrera:</label>
-            <select id="carrera" name="Carrera" required>
-                <option value="" disabled selected>Selecciona tu carrera</option>
-                <option value="Ingeniería Eléctrica">Ingeniería Eléctrica</option>
-                <option value="Técnico de nivel superior en Electricidad Industrial">Técnico de nivel superior en Electricidad Industrial</option>
-                <option value="Ingeniería en Automatización y Robótica">Ingeniería en Automatización y Robótica</option>
-                <option value="Técnico de nivel superior en Automatización y Robótica">Técnico de nivel superior en Automatización y Robótica</option>
-                <option value="Ingeniería en Mecatrónica">Ingeniería en Mecatrónica</option>
-                <option value="Técnico de nivel superior en Mecatrónica">Técnico de nivel superior en Mecatrónica</option>
-                <option value="Área Mecánica">Área Mecánica</option>
-                <option value="Otras Áreas">Otras Áreas</option>
-            </select>
-
-            <label for="telefono">Teléfono:</label>
-            <input type="tel" id="telefono" name="Telefono" required>
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="Email" required>
-
-            <label for="pass">Contraseña:</label>
-            <input type="password" id="pass" name="Pass" required>
-            
-            <button type="submit">Registrarme</button>
-        </form>
+        <hr>
         
-        <p class="toggle-link">
-            ¿Ya tienes cuenta? 
-            <a href="#" onclick="showLogin()">Iniciar Sesión</a>
-        </p>
-    </div>
+        <div id="register-view" class="hidden">
+            <h2>📝 Nuevo Registro</h2>
+            <form id="registroForm">
+                
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" name="Nombre" required>
 
-</div>
+                <label for="rut">RUT:</label>
+                <input type="text" id="rut" name="RUT" required>
+
+                <label for="carrera">Carrera:</label>
+                <select id="carrera" name="Carrera" required>
+                    <option value="" disabled selected>Selecciona tu carrera</option>
+                    <option value="Ingeniería Eléctrica">Ingeniería Eléctrica</option>
+                    <option value="Técnico de nivel superior en Electricidad Industrial">Técnico de nivel superior en Electricidad Industrial</option>
+                    <option value="Ingeniería en Automatización y Robótica">Ingeniería en Automatización y Robótica</option>
+                    <option value="Técnico de nivel superior en Automatización y Robótica">Técnico de nivel superior en Automatización y Robótica</option>
+                    <option value="Ingeniería en Mecatrónica">Ingeniería en Mecatrónica</option>
+                    <option value="Técnico de nivel superior en Mecatrónica">Técnico de nivel superior en Mecatrónica</option>
+                    <option value="Área Mecánica">Área Mecánica</option>
+                    <option value="Otras Áreas">Otras Áreas</option>
+                </select>
+
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" name="Telefono" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="Email" required>
+
+                <label for="pass">Contraseña:</label>
+                <input type="password" id="pass" name="Pass" required>
+
+                <button type="submit">Registrarme</button>
+            </form>
+            
+            <p class="toggle-link">
+                ¿Ya tienes cuenta? 
+                <a href="#" onclick="showLogin()">Iniciar Sesión</a>
+            </p>
+        </div>
+    </div> </div>
 
 <script>
+    // Muestra el Login/Registro y oculta la Bienvenida
+    function showLoginRegister() {
+        document.getElementById('welcome-view').classList.add('hidden');
+        document.getElementById('auth-container').classList.remove('hidden');
+        // Aseguramos que solo se vea el Login al entrar
+        showLogin(); 
+    }
+
     // Función para mostrar el formulario de Registro
     function showRegister() {
         document.getElementById('login-view').classList.add('hidden');
