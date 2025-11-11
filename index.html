@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Materiales - Acceso Docentes</title>
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,7 +22,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 90%;
-            max-width: 400px;
+            max-width: 600px; /* Ancho suficiente para las vistas */
         }
         h2 {
             text-align: center;
@@ -40,13 +41,14 @@
             font-weight: bold;
             color: #555;
         }
-        input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select {
+        input[type="text"], input[type="email"], input[type="password"], 
+        input[type="tel"], input[type="number"], select, textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Asegura que el padding no cambie el ancho */
+            box-sizing: border-box; 
         }
         button {
             width: 100%;
@@ -59,29 +61,104 @@
             margin-top: 10px;
         }
         .btn-primary {
-            background-color: #007bff; /* Azul */
+            background-color: #007bff;
+        }
+        .btn-success {
+            background-color: #28a745;
         }
         .btn-secondary {
-            background-color: #6c757d; /* Gris */
+            background-color: #6c757d;
         }
-        .btn-primary:hover, .btn-secondary:hover {
+        .btn-primary:hover, .btn-success:hover, .btn-secondary:hover {
             opacity: 0.9;
         }
         .welcome-buttons button {
             margin-bottom: 10px;
         }
-        .error-message {
-            color: red;
+        .error-message, .success-message {
             text-align: center;
             margin-bottom: 10px;
+            font-weight: bold;
         }
+        .error-message { color: red; }
+        .success-message { color: green; }
+        
+        /* Estilos para la caja de datos del usuario en el dashboard */
+        .user-data-box {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .user-data-box h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .user-data-box p {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .user-data-box p strong {
+            color: #000;
+        }
+        
+        /* Estilos específicos para la solicitud de materiales */
+        #materials-list {
+            margin-top: 15px;
+            border: 1px solid #eee;
+            padding: 10px;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .material-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        .material-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Estilos para la tabla de historial */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .history-table th, .history-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .history-table th {
+            background-color: #f2f2f2;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+        .status-pendiente { background-color: #ffc107; color: #333;}
+        .status-aprobada { background-color: #28a745; }
+        .status-rechazada { background-color: #dc3545; }
     </style>
-</head>
+    </head>
 <body>
 
 <div class="container">
+    
     <div id="welcome-view" class="view active">
-        <h2>👋 Bienvenido al Gestor de Materiales</h2>
+        <h2>👋 Bienvenido al sistema de registro de pañol</h2>
         <p style="text-align: center; margin-bottom: 30px;">Por favor, inicia sesión para solicitar materiales o regístrate si es tu primera vez.</p>
         <div class="welcome-buttons">
             <button class="btn-primary" onclick="showView('login-view')">🔑 Iniciar Sesión</button>
@@ -94,13 +171,13 @@
         <form id="register-form">
             
             <label for="nombreCompleto">Nombre Completo</label>
-            <input type="text" id="nombreCompleto" name="Nombre Completo" required>
+            <input type="text" id="nombreCompleto" required>
 
             <label for="rut">RUT (sin puntos, con guion)</label>
-            <input type="text" id="rut" name="Rut" required>
+            <input type="text" id="rut" required>
             
             <label for="carrera">Carrera</label>
-            <select id="carrera" name="Carrera" required>
+            <select id="carrera" required>
                 <option value="" disabled selected>Selecciona tu carrera</option>
                 <option value="Ingeniería Eléctrica">Ingeniería Eléctrica</option>
                 <option value="Técnico de nivel superior en Electricidad Industrial">Técnico de nivel superior en Electricidad Industrial</option>
@@ -113,13 +190,13 @@
             </select>
 
             <label for="telefono">Teléfono</label>
-            <input type="tel" id="telefono" name="Telefono" required>
+            <input type="tel" id="telefono" required>
 
-            <label for="email">Email</label>
-            <input type="email" id="email-reg" name="Email" required>
+            <label for="email-reg">Email</label>
+            <input type="email" id="email-reg" required>
 
             <label for="password-reg">Contraseña</label>
-            <input type="password" id="password-reg" name="Contraseña" required>
+            <input type="password" id="password-reg" required>
 
             <div class="error-message" id="register-error"></div>
             
@@ -132,10 +209,10 @@
         <h2>🔑 Inicio de Sesión</h2>
         <form id="login-form">
             <label for="email-log">Email</label>
-            <input type="email" id="email-log" name="Email" required>
+            <input type="email" id="email-log" required>
 
             <label for="password-log">Contraseña</label>
-            <input type="password" id="password-log" name="Contraseña" required>
+            <input type="password" id="password-log" required>
 
             <div class="error-message" id="login-error"></div>
 
@@ -145,122 +222,306 @@
     </div>
 
     <div id="dashboard-view" class="view">
-        <h2 id="welcome-user">Hola, Docente!</h2>
-        <p>Desde aquí podrás solicitar materiales y ver tu historial de solicitudes.</p>
-        <button class="btn-primary" onclick="showView('request-view')">📝 Solicitar Materiales</button>
-        <button class="btn-secondary" onclick="showView('history-view')">📜 Ver Historial</button>
+        
+        <h2 id="welcome-user">👋 Hola, [Nombre]!</h2>
+        
+        <div class="user-data-box">
+            <h4>Tus Datos de Docente</h4>
+            <p><strong>RUT:</strong> <span id="user-rut">---</span></p>
+            <p><strong>Email:</strong> <span id="user-email">---</span></p>
+            <p><strong>Carrera:</strong> <span id="user-carrera">---</span></p>
+            <p><strong>Teléfono:</strong> <span id="user-telefono">---</span></p>
+        </div>
+
+        <p style="text-align: center; margin-top: 25px;">Selecciona una opción:</p>
+        
+        <button class="btn-success" onclick="showView('request-view')">
+            📝 Realizar Nueva Solicitud
+        </button>
+        <button class="btn-primary" onclick="showHistoryAndFetch()">
+            📜 Ver Historial de Solicitudes
+        </button>
         <hr style="margin-top: 20px;">
-        <button class="btn-secondary" onclick="logout()">🚪 Cerrar Sesión</button>
+        <button class="btn-secondary" onclick="logout()">
+            🚪 Cerrar Sesión
+        </button>
     </div>
 
-</div>
+    <div id="request-view" class="view">
+        <h2>📝 Nueva Solicitud de Materiales</h2>
+        <form id="request-form">
+            <label for="asignatura">Asignatura</label>
+            <input type="text" id="asignatura" required placeholder="Ej: Laboratorio de Electrónica I">
 
-<script>
-    // URL de tu Web App de Google Apps Script (¡Debes reemplazarla!)
-    const WEB_APP_URL = 'REEMPLAZA_ESTA_URL_CON_TU_ENDPOINT_DE_APPS_SCRIPT';
+            <p style="font-weight: bold; margin-top: 20px;">Añadir Materiales:</p>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="material-name" placeholder="Nombre del material" style="flex-grow: 3;">
+                <input type="number" id="material-quantity" placeholder="Cant." min="1" value="1" style="width: 80px;">
+                <button type="button" class="btn-secondary" onclick="addMaterial()" style="width: auto;">Añadir</button>
+            </div>
+            
+            <label style="margin-top: 15px;">Materiales a solicitar:</label>
+            <div id="materials-list">
+                <p id="empty-materials" style="color: #888;">No has añadido materiales.</p>
+            </div>
+            
+            <div class="success-message" id="request-success"></div>
+            <div class="error-message" id="request-error"></div>
+
+            <button type="submit" class="btn-success" id="send-request-btn">Enviar Solicitud</button>
+            <button type="button" class="btn-secondary" onclick="showView('dashboard-view')">Volver al Panel</button>
+        </form>
+    </div>
+
+    <div id="history-view" class="view">
+        <h2>📜 Historial de Solicitudes</h2>
+        <p id="history-loading" style="text-align: center; font-weight: bold; color: #007bff;">Cargando historial...</p>
+        <div id="history-content">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Asignatura</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body">
+                    </tbody>
+            </table>
+            <p id="no-history" style="text-align: center; display: none;">No tienes solicitudes en el historial.</p>
+        </div>
+
+        <button type="button" class="btn-secondary" onclick="showView('dashboard-view')" style="margin-top: 20px;">Volver al Panel</button>
+    </div>
+
+</div> <script>
+    // 📢 URL DE GOOGLE APPS SCRIPT: REEMPLAZADA CON TU ENLACE PROPORCIONADO
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyJgA-Q9xDNLiwdRAMEY6TbwSp4LEbQ23spd0SO4-ZKTc7WplfFbCuNob8pzc0DlJY6sQ/exec';
     
-    // Función para cambiar de vista
+    // Almacenamiento local del estado
+    let currentUserEmail = localStorage.getItem('docenteEmail') || null;
+    let materialItems = []; 
+
+    // --- FUNCIONES DE UTILIDAD GENERAL ---
+
     function showView(viewId) {
-        // Oculta todas las vistas
         document.querySelectorAll('.view').forEach(view => {
             view.classList.remove('active');
         });
-        // Muestra la vista solicitada
+        
+        if (viewId === 'dashboard-view') {
+            populateDashboardData();
+        }
+        
         document.getElementById(viewId).classList.add('active');
     }
 
-    // Manejar el envío del formulario de REGISTRO
-    document.getElementById('register-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Detiene el envío del formulario tradicional
-        
-        const form = e.target;
-        const data = {
-            action: 'registro', // La acción que espera tu Apps Script
-            payload: {
-                nombreCompleto: form['nombreCompleto'].value,
-                rut: form['rut'].value,
-                carrera: form['carrera'].value,
-                telefono: form['telefono'].value,
-                email: form['email-reg'].value,
-                password: form['password-reg'].value
-            }
-        };
+    function populateDashboardData() {
+        // Lee los datos del usuario guardados al iniciar sesión
+        const docenteInfo = JSON.parse(localStorage.getItem('docenteInfo'));
 
-        // LLAMADA A LA API (Apps Script)
-        fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors', // Necesario para la conexión inicial con Apps Script
-            contentType: 'application/json',
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            // Nota: Con 'no-cors', el .json() o .text() fallará. 
-            // Debes cambiar 'no-cors' por 'cors' y ajustar la respuesta 
-            // en Apps Script para un entorno real. Por ahora, asumimos éxito.
-            document.getElementById('register-error').textContent = 'Registro enviado. Por favor, inicia sesión.';
-            form.reset();
-            setTimeout(() => showView('login-view'), 2000);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('register-error').textContent = 'Error al intentar registrar. Intente nuevamente.';
-        });
-    });
-
-    // Manejar el envío del formulario de INICIO DE SESIÓN
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const form = e.target;
-        const data = {
-            action: 'login',
-            payload: {
-                email: form['email-log'].value,
-                password: form['password-log'].value
-            }
-        };
-
-        // LLAMADA A LA API (Apps Script)
-        fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors', // Mismo problema de CORS que en el registro
-            contentType: 'application/json',
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            // En un caso real, aquí procesarías la respuesta JSON de tu Apps Script.
-            // Si el login es exitoso:
-            const docenteName = form['email-log'].value.split('@')[0]; // Simulación
-            document.getElementById('welcome-user').textContent = '👋 Hola, ' + docenteName + '!';
-            
-            // Guardar el email del usuario en el navegador para futuras solicitudes
-            localStorage.setItem('docenteEmail', form['email-log'].value); 
-            
-            form.reset();
-            showView('dashboard-view');
-        })
-        .catch(error => {
-            // Esto se ejecutaría si la petición falla completamente (no si el login es malo)
-            console.error('Error:', error);
-            document.getElementById('login-error').textContent = 'Error de conexión. Verifica la URL de la API.';
-        });
-
-        // NOTA: Para simular un error de login sin la API
-        // document.getElementById('login-error').textContent = 'Email o contraseña incorrectos.';
-    });
-
-    // Función para cerrar sesión
-    function logout() {
-        localStorage.removeItem('docenteEmail');
-        showView('welcome-view');
+        if (docenteInfo) {
+            document.getElementById('welcome-user').textContent = `👋 Hola, ${docenteInfo['Nombre Completo']}!`;
+            // Asegúrate de que los nombres de las propiedades coincidan con los que devuelve tu Apps Script
+            document.getElementById('user-rut').textContent = docenteInfo.Rut || 'No disponible';
+            document.getElementById('user-email').textContent = docenteInfo.Email || 'No disponible';
+            document.getElementById('user-carrera').textContent = docenteInfo.Carrera || 'No disponible';
+            document.getElementById('user-telefono').textContent = docenteInfo.Telefono || 'No disponible';
+        } else if (currentUserEmail) {
+            document.getElementById('welcome-user').textContent = `👋 Hola, ${currentUserEmail.split('@')[0]}!`;
+        }
     }
 
-    // Asegurarse de que al cargar, se vea la vista de bienvenida
-    document.addEventListener('DOMContentLoaded', () => {
+    function logout() {
+        localStorage.removeItem('docenteEmail');
+        localStorage.removeItem('docenteInfo');
+        currentUserEmail = null;
+        materialItems = []; 
         showView('welcome-view');
+        
+        // Limpiar campos visualmente
+        document.getElementById('user-rut').textContent = '---';
+        document.getElementById('user-email').textContent = '---';
+        document.getElementById('user-carrera').textContent = '---';
+        document.getElementById('user-telefono').textContent = '---';
+    }
+
+    async function apiFetch(action, payload) {
+        try {
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ action, payload })
+            });
+            
+            if (!response.ok) {
+                // Manejar errores de red/servidor (ej: 500)
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return await response.json(); // Intentamos parsear la respuesta JSON
+
+        } catch (error) {
+            console.error('API Error:', error);
+            // Devolver una estructura de error consistente para el manejo del frontend
+            return { status: 500, data: { success: false, message: 'Error de conexión o del servidor: ' + error.message } };
+        }
+    }
+
+
+    // --- 1. LÓGICA DE REGISTRO ---
+
+    document.getElementById('register-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const registerError = document.getElementById('register-error');
+        registerError.classList.remove('success-message');
+        registerError.classList.add('error-message');
+        registerError.textContent = 'Procesando registro...'; 
+
+        const data = {
+            nombreCompleto: form.querySelector('#nombreCompleto').value,
+            rut: form.querySelector('#rut').value,
+            carrera: form.querySelector('#carrera').value,
+            telefono: form.querySelector('#telefono').value,
+            email: form.querySelector('#email-reg').value,
+            password: form.querySelector('#password-reg').value
+        };
+
+        const apiResponse = await apiFetch('registro', data);
+
+        if (apiResponse.data && apiResponse.data.success) {
+            registerError.classList.remove('error-message');
+            registerError.classList.add('success-message');
+            registerError.textContent = '✅ ¡Registro exitoso! Por favor, inicia sesión.';
+            form.reset();
+            setTimeout(() => {
+                registerError.textContent = '';
+                showView('login-view');
+            }, 3000);
+        } else {
+            registerError.textContent = apiResponse.data ? apiResponse.data.message : 'Error desconocido al registrar.';
+        }
+    });
+
+    // --- 2. LÓGICA DE INICIO DE SESIÓN ---
+    
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const loginError = document.getElementById('login-error');
+        loginError.textContent = 'Verificando credenciales...';
+
+        const data = {
+            email: form.querySelector('#email-log').value,
+            password: form.querySelector('#password-log').value
+        };
+
+        const apiResponse = await apiFetch('login', data);
+        
+        if (apiResponse.data && apiResponse.data.success) {
+            // Login exitoso
+            const docente = apiResponse.data.docente; 
+            
+            // Guardamos el email y los datos completos
+            currentUserEmail = docente.Email;
+            localStorage.setItem('docenteEmail', docente.Email);
+            // Los datos completos son cruciales para rellenar el menú:
+            localStorage.setItem('docenteInfo', JSON.stringify(docente)); 
+            
+            form.reset();
+            showView('dashboard-view'); 
+        } else {
+            // Fallo en el login
+            loginError.textContent = apiResponse.data ? apiResponse.data.message : 'Credenciales inválidas o error de conexión.';
+        }
+    });
+
+    // --- 3. LÓGICA DE SOLICITUD DE MATERIALES (Pendiente de completar en el siguiente paso) ---
+
+    function addMaterial() {
+        const nameInput = document.getElementById('material-name');
+        const quantityInput = document.getElementById('material-quantity');
+        
+        const name = nameInput.value.trim();
+        const quantity = parseInt(quantityInput.value, 10);
+
+        if (name && quantity > 0) {
+            const item = { material: name, cantidad: quantity };
+            materialItems.push(item);
+            renderMaterialList();
+            nameInput.value = '';
+            quantityInput.value = 1;
+        }
+    }
+
+    function removeMaterial(index) {
+        materialItems.splice(index, 1);
+        renderMaterialList();
+    }
+
+    function renderMaterialList() {
+        const listDiv = document.getElementById('materials-list');
+        const emptyP = document.getElementById('empty-materials');
+        listDiv.innerHTML = '';
+
+        if (materialItems.length === 0) {
+            listDiv.appendChild(emptyP);
+            emptyP.style.display = 'block';
+        } else {
+            emptyP.style.display = 'none';
+            materialItems.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'material-item';
+                div.innerHTML = `
+                    <span><b>${item.cantidad}x</b> ${item.material}</span>
+                    <button type="button" onclick="removeMaterial(${index})" style="width: auto; background-color: #dc3545; padding: 5px 10px;">X</button>
+                `;
+                listDiv.appendChild(div);
+            });
+        }
+    }
+    
+    document.getElementById('request-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        document.getElementById('request-error').textContent = '⚠️ Funcionalidad de Solicitud Pendiente.';
+        document.getElementById('request-success').textContent = '';
+
+        // El resto del código de envío se completará después de verificar el menú
+    });
+
+    // --- 4. LÓGICA DE HISTORIAL DE SOLICITUDES (Pendiente de completar en el siguiente paso) ---
+    
+    function showHistoryAndFetch() {
+        showView('history-view');
+        document.getElementById('history-loading').textContent = '⚠️ Funcionalidad de Historial Pendiente.';
+        document.getElementById('history-table-body').innerHTML = '';
+        document.getElementById('no-history').style.display = 'block';
+    }
+
+    async function fetchHistory() {
+        // Esta función se implementará completamente en el siguiente paso.
+        console.log("Fetch History llamado, esperando implementación de la API.");
+    }
+
+    // --- Inicialización de la página ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Al cargar la página, verifica si hay una sesión activa
+        if (currentUserEmail) {
+            showView('dashboard-view'); 
+        } else {
+            showView('welcome-view');
+        }
+        renderMaterialList(); // Inicializa la lista de materiales
     });
 
 </script>
+</body>
+</html>
 
 </body>
 </html>
