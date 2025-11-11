@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Principal - Solicitudes</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f4f4f4; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; /* Alineamos arriba para mejor vista */
+            min-height: 100vh; 
+            margin: 20px;
+        }
+        .dashboard-container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+            width: 100%; 
+            max-width: 600px; /* Un poco más ancho para el dashboard */
+        }
+        h2 { 
+            text-align: center; 
+            color: #007bff; 
+            margin-bottom: 20px;
+        }
+        .user-info {
+            background-color: #e9f5ff;
+            border: 1px solid #cce5ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+        .user-info p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+        .user-info strong {
+            display: inline-block;
+            width: 120px;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .menu-buttons button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        /* Estilos específicos para cada botón */
+        #btnSolicitar {
+            background-color: #28a745; /* Verde */
+            color: white;
+        }
+        #btnSolicitar:hover { background-color: #1e7e34; }
+
+        #btnPendientes {
+            background-color: #ffc107; /* Amarillo */
+            color: #333;
+        }
+        #btnPendientes:hover { background-color: #e0a800; }
+
+        #btnCerrarSesion {
+            background-color: #dc3545; /* Rojo */
+            color: white;
+            margin-top: 20px; /* Separación de los botones principales */
+        }
+        #btnCerrarSesion:hover { background-color: #c82333; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h2>🛠️ Panel Principal de Solicitudes</h2>
+
+    <div class="user-info">
+        <h3>Datos de Usuario</h3>
+        <p><strong>Nombre:</strong> <span id="displayNombre">Cargando...</span></p>
+        <p><strong>RUT:</strong> <span id="displayRUT">Cargando...</span></p>
+        <p><strong>Carrera:</strong> <span id="displayCarrera">Cargando...</span></p>
+        <p><strong>Email:</strong> <span id="displayEmail">Cargando...</span></p>
+    </div>
+
+    <div class="menu-buttons">
+        
+        <button id="btnSolicitar" onclick="navigateTo('solicitar')">
+            📦 Solicitar Materiales
+        </button>
+
+        <button id="btnPendientes" onclick="navigateTo('pendientes')">
+            ⏱️ Entregas Pendientes
+        </button>
+    </div>
+    
+    <button id="btnCerrarSesion" onclick="cerrarSesion()">
+        🚪 Cerrar Sesión
+    </button>
+</div>
+
+<script>
+    // ESTA FUNCIÓN DEBE EJECUTARSE AL CARGAR LA PÁGINA TRAS EL LOGIN
+    function cargarDatosUsuario() {
+        // NOTA: En un sistema real, los datos se obtendrían de una "sesión" 
+        // (por ejemplo, del LocalStorage o cookies) tras el login.
+        
+        // Simulación de datos obtenidos tras el Login exitoso
+        const datosSimulados = {
+            nombre: "Juan Pérez Diaz",
+            rut: "19.876.543-2", // Se muestra con puntos para mejor lectura
+            carrera: "Ingeniería en Automatización y Robótica",
+            email: "juan.perez@ejemplo.com"
+        };
+
+        // Rellenar la sección de información
+        document.getElementById('displayNombre').textContent = datosSimulados.nombre;
+        document.getElementById('displayRUT').textContent = datosSimulados.rut;
+        document.getElementById('displayCarrera').textContent = datosSimulados.carrera;
+        document.getElementById('displayEmail').textContent = datosSimulados.email;
+    }
+
+    // Función de navegación para los botones principales
+    function navigateTo(seccion) {
+        if (seccion === 'solicitar') {
+            alert('Navegando a la página de Solicitud de Materiales.');
+            // Aquí iría: window.location.href = 'solicitar.html';
+        } else if (seccion === 'pendientes') {
+            alert('Navegando a la página de Entregas Pendientes.');
+            // Aquí iría: window.location.href = 'pendientes.html';
+        }
+    }
+
+    // Función para cerrar la sesión
+    function cerrarSesion() {
+        // 1. Limpiar cualquier dato de sesión guardado (LocalStorage, cookies, etc.)
+        // localStorage.removeItem('usuarioLogeado'); 
+        
+        alert('Sesión cerrada. Volviendo a la página de Login.');
+        // 2. Redirigir al usuario a la página de Login
+        // window.location.href = 'index.html'; 
+    }
+
+    // Cargar los datos cuando el menú se muestre
+    window.onload = cargarDatosUsuario;
+</script>
+</body>
+</html>
