@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Docentes</title>
+    <!-- Carga de Tailwind CSS para un diseño moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f9; }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border-radius: 1rem; /* rounded-xl */
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .icon { font-size: 2.5rem; }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+<div class="container mx-auto max-w-4xl">
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10 border-b-4 border-blue-500 pb-3">
+        🖥️ Panel de Control Docentes
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- 1. Solicitar Material -->
+        <a href="solicitar.html" class="card bg-white shadow-lg p-6 flex flex-col items-center text-center hover:bg-blue-50">
+            <span class="icon text-blue-600 mb-3">📦</span>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Solicitar Material</h2>
+            <p class="text-gray-600">Genera una nueva solicitud de materiales para tu asignatura.</p>
+        </a>
+
+        <!-- 2. Mis Solicitudes Pendientes -->
+        <a href="mis_pendientes.html" class="card bg-white shadow-lg p-6 flex flex-col items-center text-center hover:bg-yellow-50">
+            <span class="icon text-yellow-600 mb-3">🕒</span>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Mis Solicitudes Pendientes</h2>
+            <p class="text-gray-600">Revisa el estado de tus solicitudes que aún no han sido entregadas.</p>
+        </a>
+        
+        <!-- 3. Historial -->
+        <a href="historial.html" class="card bg-white shadow-lg p-6 flex flex-col items-center text-center hover:bg-green-50">
+            <span class="icon text-green-600 mb-3">📜</span>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Historial de Solicitudes</h2>
+            <p class="text-gray-600">Consulta pedidos pasados y re-solicita materiales fácilmente.</p>
+        </a>
+
+        <!-- 4. Compras (Nueva Opción) -->
+        <a href="compras.html" class="card bg-white shadow-lg p-6 flex flex-col items-center text-center hover:bg-red-50">
+            <span class="icon text-red-600 mb-3">🛒</span>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Gestión de Compras</h2>
+            <p class="text-gray-600">Registra y administra las solicitudes de compra de nuevos equipos.</p>
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>
