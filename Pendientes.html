@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Materiales</title>
+    <style>
+        /* Estilos generales */
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f4f4f4; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            min-height: 100vh; 
+            margin: 20px;
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+            width: 100%; 
+            max-width: 650px; /* Aumentado para la tabla */
+        }
+        h2 { 
+            text-align: center; 
+            color: #007bff; 
+            margin-bottom: 25px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        /* Estilos de formulario */
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold; 
+            color: #333;
+        }
+        select, input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        select:focus, input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+        
+        /* Tabla de Ítems */
+        .table-container {
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .items-table th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .items-table input {
+            padding: 8px;
+            margin-bottom: 0;
+            border: 1px solid #ccc;
+        }
+        .items-table .material-input { width: 98%; }
+        .items-table .cantidad-input { width: 90%; text-align: right; }
+
+        /* Botón de eliminar fila */
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .delete-btn:hover { background-color: #c82333; }
+        
+        /* Botones de acción */
+        #btnContinuar, #btnAddItem {
+            width: 100%;
+            padding: 15px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+            margin-bottom: 15px;
+        }
+        #btnContinuar {
+            background-color: #28a745; /* Verde para continuar */
+        }
+        #btnContinuar:hover { 
+            background-color: #1e7e34; 
+        }
+
+        #btnAddItem {
+            background-color: #007bff; /* Azul para agregar ítem */
+            font-size: 16px;
+            padding: 10px;
+            margin-top: 5px;
+        }
+        #btnAddItem:hover {
+            background-color: #0056b3;
+        }
+
+        #btnEnviarSolicitud {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745; /* Verde para enviar */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 15px;
+        }
+        #btnEnviarSolicitud:hover {
+            background-color: #1e7e34;
+        }
+
+        #btnVolver {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+            color: #6c757d;
+            text-decoration: none;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+        }
+        #btnVolver:hover {
+            background-color: #e2e6ea;
+        }
+        
+        /* Estilos de error */
+        .input-error {
+            border: 2px solid red !important;
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📝 Nueva Solicitud de Materiales</h2>
+
+    <form id="solicitudForm" onsubmit="return false;"> <!-- Prevent default form submission -->
+        
+        <!-- PASO 1: Selección del Docente y Asignatura -->
+        <div id="paso-docente">
+            <label for="docente">Selecciona el Docente a cargo:</label>
+            <select id="docente" name="Docente" required>
+                <!-- Opciones de docente actualizadas -->
+                <option value="" disabled selected>-- Elija un Docente --</option>
+                <option value="AARÓN EDUARDO SEPÚLVEDA MEDINA">AARÓN EDUARDO SEPÚLVEDA MEDINA</option>
+                <option value="ALEJANDRO GABRIEL MOENA VALDERRAMA">ALEJANDRO GABRIEL MOENA VALDERRAMA</option>
+                <option value="BRAYAN PATRICIO DEL VALLE AEDO">BRAYAN PATRICIO DEL VALLE AEDO</option>
+                <option value="DANIELA FERNANDA MARTÍNEZ MARTÍNEZ">DANIELA FERNANDA MARTÍNEZ MARTÍNEZ</option>
+                <option value="EDUARDO ARTURO BASTÍAS GARCÍA">EDUARDO ARTURO BASTÍAS GARCÍA</option>
+                <option value="ELÍAS ANDRÉS POBLETE AVILA">ELÍAS ANDRÉS POBLETE AVILA</option>
+                <option value="GERARDO NICOLÁS SEPÚLVEDA GUTIÉRREZ">GERARDO NICOLÁS SEPÚLVEDA GUTIÉRREZ</option>
+                <option value="GIOVANNI ANDRÉS JARA TORRES">GIOVANNI ANDRÉS JARA TORRES</option>
+                <option value="JORGE ANDRÉS PÉREZ MILLAR">JORGE ANDRÉS PÉREZ MILLAR</option>
+                <option value="JOSEFA CATALINA LISBOA RIVERA">JOSEFA CATALINA LISBOA RIVERA</option>
+                <option value="JULIO CESAR ALARCON MONTEROS">JULIO CESAR ALARCON MONTEROS</option>
+                <option value="MANUEL ALEJANDRO HENRIQUEZ OLIVA">MANUEL ALEJANDRO HENRIQUEZ OLIVA</option>
+                <option value="MARCO ANTONIO ARRIAGADA CASAS">MARCO ANTONIO ARRIAGADA CASAS</option>
+                <option value="PEDRO PATRICIO PEDRERO PÉREZ">PEDRO PATRICIO PEDRERO PÉREZ</option>
+                <option value="RICHARD ANTONIO VALDERRAMA SAN MARTIN">RICHARD ANTONIO VALDERRAMA SAN MARTIN</option>
+                <option value="RICHARD NICOLÁS SANTOS MARTÍNEZ">RICHARD NICOLÁS SANTOS MARTÍNEZ</option>
+                <option value="ROBERTO SEBASTIAN CID LIZAMA">ROBERTO SEBASTIAN CID LIZAMA</option>
+                <option value="RODRIGO ALEJANDRO CONTRERAS ZÚÑIGA">RODRIGO ALEJANDRO CONTRERAS ZÚÑIGA</option>
+                <option value="RODRIGO ALEJANDRO GARRIDO GARRIDO">RODRIGO ALEJANDRO GARRIDO GARRIDO</option>
+                <option value="ROLANDO EDUARDO ORTEGA FUENTES">ROLANDO EDUARDO ORTEGA FUENTES</option>
+                <option value="VÍCTOR EDUARDO ZAPATA MYRIK">VÍCTOR EDUARDO ZAPATA MYRIK</option>
+                <option value="OTROS DOCENTES">OTROS DOCENTES</option>
+            </select>
+
+            <!-- Campo para la Asignatura -->
+            <label for="asignatura">Asignatura (Módulo) de Solicitud:</label>
+            <input type="text" id="asignatura" name="Asignatura" placeholder="Ej: Electrónica Industrial" required>
+            
+            <button type="button" id="btnContinuar" onclick="validarDocente()">
+                Continuar a Solicitud de Ítems
+            </button>
+        </div>
+
+        <!-- PASO 2: Formulario de Ítems (Inicialmente oculto) -->
+        <div id="paso-items" style="margin-top: 30px;" class="hidden">
+            <h3>🛒 Detalle de Materiales</h3>
+            <div class="table-container">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 70%;">Material/Ítem</th>
+                            <th style="width: 20%;">Cantidad</th>
+                            <th style="width: 10%;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsBody">
+                        <!-- Filas de ítems se agregan aquí con JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <button type="button" id="btnAddItem" onclick="agregarFilaMaterial()">
+                + Agregar otro Material
+            </button>
+
+            <!-- Botón para enviar la solicitud final -->
+            <button type="button" id="btnEnviarSolicitud" onclick="enviarSolicitud()">
+                Enviar Solicitud Final
+            </button>
+        </div>
+
+    </form>
+    
+    <a href="menu.html" id="btnVolver">← Volver al Menú Principal</a>
+</div>
+
+<script>
+    // Docentes válidos actualizados para la validación
+    const docentesValidos = [
+        "AARÓN EDUARDO SEPÚLVEDA MEDINA",
+        "ALEJANDRO GABRIEL MOENA VALDERRAMA",
+        "BRAYAN PATRICIO DEL VALLE AEDO",
+        "DANIELA FERNANDA MARTÍNEZ MARTÍNEZ",
+        "EDUARDO ARTURO BASTÍAS GARCÍA",
+        "ELÍAS ANDRÉS POBLETE AVILA",
+        "GERARDO NICOLÁS SEPÚLVEDA GUTIÉRREZ",
+        "GIOVANNI ANDRÉS JARA TORRES",
+        "JORGE ANDRÉS PÉREZ MILLAR",
+        "JOSEFA CATALINA LISBOA RIVERA",
+        "JULIO CESAR ALARCON MONTEROS",
+        "MANUEL ALEJANDRO HENRIQUEZ OLIVA",
+        "MARCO ANTONIO ARRIAGADA CASAS",
+        "PEDRO PATRICIO PEDRERO PÉREZ",
+        "RICHARD ANTONIO VALDERRAMA SAN MARTIN",
+        "RICHARD NICOLÁS SANTOS MARTÍNEZ",
+        "ROBERTO SEBASTIAN CID LIZAMA",
+        "RODRIGO ALEJANDRO CONTRERAS ZÚÑIGA",
+        "RODRIGO ALEJANDRO GARRIDO GARRIDO",
+        "ROLANDO EDUARDO ORTEGA FUENTES",
+        "VÍCTOR EDUARDO ZAPATA MYRIK",
+        "OTROS DOCENTES"
+    ];
+
+    /**
+     * Valida que el docente y la asignatura estén seleccionados/rellenados.
+     * Si es válido, avanza al paso de agregar materiales.
+     */
+    function validarDocente() {
+        const selectDocente = document.getElementById('docente');
+        const inputAsignatura = document.getElementById('asignatura');
+        const docenteSeleccionado = selectDocente.value;
+        const asignaturaValue = inputAsignatura.value.trim();
+        let isValid = true;
+        
+        // Limpiar cualquier clase de error previa
+        selectDocente.classList.remove('input-error');
+        inputAsignatura.classList.remove('input-error');
+
+        // 1. Validar Docente
+        if (!docenteSeleccionado || !docentesValidos.includes(docenteSeleccionado)) {
+            alert('Por favor, selecciona un docente válido de la lista.');
+            selectDocente.classList.add('input-error');
+            isValid = false;
+        }
+
+        // 2. Validar Asignatura
+        if (asignaturaValue === '') {
+            alert('Por favor, ingresa el nombre de la Asignatura/Módulo.');
+            inputAsignatura.classList.add('input-error');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        // 3. Si la selección es válida, avanzar
+        // alert('Docente y Asignatura válidos. ¡Ahora puedes añadir los materiales!');
+
+        // Ocultar el selector de docente/asignatura
+        document.getElementById('paso-docente').classList.add('hidden');
+
+        // Mostrar el formulario de ítems y agregar una fila inicial si está vacía
+        document.getElementById('paso-items').classList.remove('hidden');
+        if (document.getElementById('itemsBody').children.length === 0) {
+            agregarFilaMaterial();
+        }
+    }
+
+    /**
+     * Agrega una nueva fila a la tabla para ingresar un material y cantidad.
+     */
+    function agregarFilaMaterial() {
+        const tbody = document.getElementById('itemsBody');
+        const nuevaFila = tbody.insertRow();
+        
+        // Columna 1: Material/Ítem
+        let cell1 = nuevaFila.insertCell(0);
+        cell1.innerHTML = `<input type="text" class="material-input" placeholder="Nombre del material o herramienta" required>`;
+        
+        // Columna 2: Cantidad
+        let cell2 = nuevaFila.insertCell(1);
+        cell2.innerHTML = `<input type="number" class="cantidad-input" value="1" min="1" required>`;
+        
+        // Columna 3: Acción (Eliminar)
+        let cell3 = nuevaFila.insertCell(2);
+        cell3.innerHTML = `<button type="button" class="delete-btn" onclick="eliminarFila(this)">X</button>`;
+    }
+
+    /**
+     * Elimina la fila de la tabla a la que pertenece el botón pulsado.
+     */
+    function eliminarFila(btn) {
+        const fila = btn.parentNode.parentNode;
+        const tbody = document.getElementById('itemsBody');
+        
+        if (tbody.children.length > 1) {
+            tbody.removeChild(fila);
+        } else {
+            // No permitir eliminar la última fila para que la solicitud no quede vacía
+            alert("Debe haber al menos un material en la solicitud.");
+        }
+    }
+
+    /**
+     * Recolecta todos los datos del formulario (Docente, Asignatura e Ítems) 
+     * y simula el envío.
+     */
+    function enviarSolicitud() {
+        const docente = document.getElementById('docente').value;
+        const asignatura = document.getElementById('asignatura').value.trim();
+        const itemsBody = document.getElementById('itemsBody');
+        const items = [];
+        let hayError = false;
+
+        // 1. Validar que la tabla no esté vacía
+        if (itemsBody.children.length === 0) {
+            alert('Debes agregar al menos un material a la solicitud.');
+            return;
+        }
+
+        // 2. Recolectar y validar datos de cada fila
+        Array.from(itemsBody.children).forEach((row, index) => {
+            const materialInput = row.cells[0].querySelector('input');
+            const cantidadInput = row.cells[1].querySelector('input');
+
+            materialInput.classList.remove('input-error');
+            cantidadInput.classList.remove('input-error');
+
+            const material = materialInput.value.trim();
+            const cantidad = parseInt(cantidadInput.value, 10);
+
+            if (material === '') {
+                materialInput.classList.add('input-error');
+                hayError = true;
+            }
+            if (isNaN(cantidad) || cantidad < 1) {
+                cantidadInput.classList.add('input-error');
+                hayError = true;
+            }
+
+            items.push({ material, cantidad });
+        });
+
+        if (hayError) {
+            alert('Por favor, completa todos los campos de material y asegúrate de que la cantidad sea válida (mayor a cero).');
+            return;
+        }
+
+        // 3. Simulación de envío de datos
+        console.log("--- Datos de la Solicitud ---");
+        console.log("Docente:", docente);
+        console.log("Asignatura:", asignatura);
+        console.log("Materiales:", items);
+
+        let mensajeItems = items.map(item => `  - ${item.material} (x${item.cantidad})`).join('\n');
+
+        // Mostrar un resumen de lo que se enviaría (eventualmente a Google Sheets)
+        alert(`Solicitud Lista para Enviar:\n\n` +
+              `Docente: ${docente}\n` +
+              `Asignatura: ${asignatura}\n\n` +
+              `Materiales:\n${mensajeItems}\n\n` +
+              `[FALTA CONEXIÓN REAL A GOOGLE APPS SCRIPT]`
+        );
+
+        // Aquí iría el fetch() a Google Apps Script para registrar la solicitud.
+    }
+
+    // Inicializar con una fila vacía cuando se pase al paso 2
+    window.onload = function() {
+        // Inicializar la primera fila después de que el DOM esté cargado
+        // Esto se realiza ahora en validarDocente()
+    };
+</script>
+
+</body>
+</html>
