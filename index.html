@@ -3,205 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Solicitudes - Acceso</title>
+    <title>Gestión de Materiales - Acceso Docentes</title>
     <style>
-        /* Estilos básicos */
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-            width: 100%; 
-            max-width: 450px; 
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        h2 { text-align: center; color: #333; }
-        h3 { color: #007bff; margin-top: 25px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="tel"], input[type="email"], input[type="password"], select {
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .view {
+            display: none; /* Oculta todas las vistas por defecto */
+        }
+        .view.active {
+            display: block; /* Muestra solo la vista activa */
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; 
+            box-sizing: border-box; /* Asegura que el padding no cambie el ancho */
         }
         button {
             width: 100%;
             padding: 10px;
-            background-color: #007bff;
-            color: white;
             border: none;
             border-radius: 4px;
-            cursor: pointer;
+            color: white;
             font-size: 16px;
+            cursor: pointer;
             margin-top: 10px;
         }
-        button:hover { background-color: #0056b3; }
-        .toggle-link { text-align: center; margin-top: 15px; }
-        .hidden { display: none !important; } 
-        /* Estilo para marcar errores de validación */
-        .input-error { border: 2px solid red !important; }
+        .btn-primary {
+            background-color: #007bff; /* Azul */
+        }
+        .btn-secondary {
+            background-color: #6c757d; /* Gris */
+        }
+        .btn-primary:hover, .btn-secondary:hover {
+            opacity: 0.9;
+        }
+        .welcome-buttons button {
+            margin-bottom: 10px;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    
-    <div id="welcome-view">
-        <h2>👋 Bienvenido(a)</h2>
-        <p>
-            Esta es la plataforma de <b>solicitud de materiales e insumos</b> habilitada por 
-            el <b>pañol del área de Electricidad, Automatización y Robótica</b>, un espacio dedicado 
-            a la gestión y entrega de herramientas, instrumentos de medición, componentes electrónicos, 
-            insumos y material didáctico para el desarrollo de clases y proyectos.
-        </p>
-        
-        <h3>Consideraciones:</h3>
-        <ul>
-            <li>Todo material facilitado por pañol debe regresar en las mismas condiciones. 
-                Informe cualquier falla o incidente a la brevedad.</li>
-            <li>Como respaldo físico, los estudiantes deben entregar su <b>TNE</b> o 
-                <b>Cédula de Identidad vigente</b>, perteneciente al mismo alumno que realiza la solicitud.</li>
-            <li>Ante dudas o consultas, acercarse con el Director o Coordinador de Carrera.</li>
-        </ul>
-        
-        <button onclick="showLoginRegister()">Ingresar a la Plataforma</button>
+    <div id="welcome-view" class="view active">
+        <h2>👋 Bienvenido al Gestor de Materiales</h2>
+        <p style="text-align: center; margin-bottom: 30px;">Por favor, inicia sesión para solicitar materiales o regístrate si es tu primera vez.</p>
+        <div class="welcome-buttons">
+            <button class="btn-primary" onclick="showView('login-view')">🔑 Iniciar Sesión</button>
+            <button class="btn-secondary" onclick="showView('register-view')">✏️ Registrarse</button>
+        </div>
     </div>
 
-    <div id="auth-container" class="hidden">
-
-        <div id="login-view">
-            <h2>🔑 Iniciar Sesión</h2>
-            <form id="loginForm">
-                <label for="login-email">Email:</label>
-                <input type="email" id="login-email" name="Email" required>
-
-                <label for="login-pass">Contraseña:</label>
-                <input type="password" id="login-pass" name="Pass" required>
-
-                <button type="submit">Iniciar Sesión</button>
-            </form>
+    <div id="register-view" class="view">
+        <h2>✏️ Registro de Docentes</h2>
+        <form id="register-form">
             
-            <p class="toggle-link">
-                ¿No tienes cuenta? 
-                <a href="#" onclick="showRegister()">Regístrate aquí</a>
-            </p>
-        </div>
+            <label for="nombreCompleto">Nombre Completo</label>
+            <input type="text" id="nombreCompleto" name="Nombre Completo" required>
 
-        <hr>
-        
-        <div id="register-view" class="hidden">
-            <h2>📝 Nuevo Registro</h2>
-            <form id="registroForm">
-                
-                <label for="nombre">Nombre Completo:</label>
-                <input type="text" id="nombre" name="Nombre" required>
-
-                <label for="rut">RUT:</label>
-                <input type="text" id="rut" name="RUT" placeholder="Ej: 12345678-9" required>
-
-                <label for="carrera">Carrera:</label>
-                <select id="carrera" name="Carrera" required>
-                    <option value="" disabled selected>Selecciona tu carrera</option>
-                    <option value="Ingeniería Eléctrica">Ingeniería Eléctrica</option>
-                    <option value="Técnico de nivel superior en Electricidad Industrial">Técnico de nivel superior en Electricidad Industrial</option>
-                    <option value="Ingeniería en Automatización y Robótica">Ingeniería en Automatización y Robótica</option>
-                    <option value="Técnico de nivel superior en Automatización y Robótica">Técnico de nivel superior en Automatización y Robótica</option>
-                    <option value="Ingeniería en Mecatrónica">Ingeniería en Mecatrónica</option>
-                    <option value="Técnico de nivel superior en Mecatrónica">Técnico de nivel superior en Mecatrónica</option>
-                    <option value="Área Mecánica">Área Mecánica</option>
-                    <option value="Otras Áreas">Otras Áreas</option>
-                </select>
-
-                <label for="telefono">Teléfono:</label>
-                <input type="tel" id="telefono" name="Telefono" required>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="Email" required>
-
-                <label for="pass">Contraseña:</label>
-                <input type="password" id="pass" name="Pass" required>
-
-                <button type="submit">Registrarme</button>
-            </form>
+            <label for="rut">RUT (sin puntos, con guion)</label>
+            <input type="text" id="rut" name="Rut" required>
             
-            <p class="toggle-link">
-                ¿Ya tienes cuenta? 
-                <a href="#" onclick="showLogin()">Iniciar Sesión</a>
-            </p>
-        </div>
-    </div> 
+            <label for="carrera">Carrera</label>
+            <select id="carrera" name="Carrera" required>
+                <option value="" disabled selected>Selecciona tu carrera</option>
+                <option value="Ingeniería Eléctrica">Ingeniería Eléctrica</option>
+                <option value="Técnico de nivel superior en Electricidad Industrial">Técnico de nivel superior en Electricidad Industrial</option>
+                <option value="Ingeniería en Automatización y Robótica">Ingeniería en Automatización y Robótica</option>
+                <option value="Técnico de nivel superior en Automatización y Robótica">Técnico de nivel superior en Automatización y Robótica</option>
+                <option value="Ingeniería en Mecatrónica">Ingeniería en Mecatrónica</option>
+                <option value="Técnico de nivel superior en Mecatrónica">Técnico de nivel superior en Mecatrónica</option>
+                <option value="Área Mecánica">Área Mecánica</option>
+                <option value="Otras Áreas">Otras Áreas</option>
+            </select>
+
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="Telefono" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email-reg" name="Email" required>
+
+            <label for="password-reg">Contraseña</label>
+            <input type="password" id="password-reg" name="Contraseña" required>
+
+            <div class="error-message" id="register-error"></div>
+            
+            <button type="submit" class="btn-primary">Registrarse</button>
+            <button type="button" class="btn-secondary" onclick="showView('welcome-view')">Volver</button>
+        </form>
+    </div>
+
+    <div id="login-view" class="view">
+        <h2>🔑 Inicio de Sesión</h2>
+        <form id="login-form">
+            <label for="email-log">Email</label>
+            <input type="email" id="email-log" name="Email" required>
+
+            <label for="password-log">Contraseña</label>
+            <input type="password" id="password-log" name="Contraseña" required>
+
+            <div class="error-message" id="login-error"></div>
+
+            <button type="submit" class="btn-primary">Iniciar Sesión</button>
+            <button type="button" class="btn-secondary" onclick="showView('welcome-view')">Volver</button>
+        </form>
+    </div>
+
+    <div id="dashboard-view" class="view">
+        <h2 id="welcome-user">Hola, Docente!</h2>
+        <p>Desde aquí podrás solicitar materiales y ver tu historial de solicitudes.</p>
+        <button class="btn-primary" onclick="showView('request-view')">📝 Solicitar Materiales</button>
+        <button class="btn-secondary" onclick="showView('history-view')">📜 Ver Historial</button>
+        <hr style="margin-top: 20px;">
+        <button class="btn-secondary" onclick="logout()">🚪 Cerrar Sesión</button>
+    </div>
 
 </div>
 
 <script>
-    // --- LÓGICA DE VALIDACIÓN DEL RUT ---
-    function validarRutFormato(rut) {
-        // Elimina espacios y puntos, y convierte a mayúsculas
-        rut = rut.replace(/\s+/g, '').replace(/\./g, '').toUpperCase(); 
-
-        // Expresión regular para el formato XX.XXX.XXX-X o X.XXX.XXX-X, sin puntos.
-        // Formato: 1 a 8 dígitos + guion + dígito verificador (0-9 o K)
-        // La expresión ^(\d{1,8})-([\dk])$ valida estrictamente el formato DÍGITOS-DV
-        const rutRegex = /^(\d{1,8})-([\dK])$/;
-
-        if (!rutRegex.test(rut)) {
-            // El formato es incorrecto
-            return false;
-        }
-
-        // Si solo se requiere la validación de formato, retornamos true.
-        // Si quisieras validación matemática del dígito verificador, el código sería mucho más largo.
-        return true;
-    }
-
-    // --- LÓGICA DE MANEJO DE VISTAS ---
-
-    function showLoginRegister() {
-        document.getElementById('welcome-view').classList.add('hidden');
-        document.getElementById('auth-container').classList.remove('hidden');
-        showLogin(); 
-    }
-
-    function showRegister() {
-        document.getElementById('login-view').classList.add('hidden');
-        document.getElementById('register-view').classList.remove('hidden');
-    }
-
-    function showLogin() {
-        document.getElementById('login-view').classList.remove('hidden');
-        document.getElementById('register-view').classList.add('hidden');
-    }
-
-    // --- MANEJO DEL ENVÍO DEL FORMULARIO DE REGISTRO ---
-    const registroForm = document.getElementById('registroForm');
+    // URL de tu Web App de Google Apps Script (¡Debes reemplazarla!)
+    const WEB_APP_URL = 'REEMPLAZA_ESTA_URL_CON_TU_ENDPOINT_DE_APPS_SCRIPT';
     
-    registroForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Detener el envío por defecto
+    // Función para cambiar de vista
+    function showView(viewId) {
+        // Oculta todas las vistas
+        document.querySelectorAll('.view').forEach(view => {
+            view.classList.remove('active');
+        });
+        // Muestra la vista solicitada
+        document.getElementById(viewId).classList.add('active');
+    }
 
-        const rutInput = document.getElementById('rut');
-        const rutValue = rutInput.value;
-
-        // 1. Eliminar cualquier clase de error previa
-        rutInput.classList.remove('input-error');
-
-        // 2. Ejecutar la validación de formato
-        if (!validarRutFormato(rutValue)) {
-            alert('El RUT ingresado es inválido. Por favor, usa el formato: 20500455-6 (sin puntos).');
-            rutInput.classList.add('input-error'); // Marcar el campo en rojo
-            rutInput.focus();
-            return; // Detiene el proceso de envío
-        }
-
-        // --- AQUI VA LA LÓGICA DE ENVÍO AL GOOGLE APPS SCRIPT ---
-        // Si llegamos aquí, el formato es correcto y podemos enviar los datos.
-
-        alert('¡Formato de RUT correcto! Procediendo con el registro (Falta conectar con Google Sheet)');
+    // Manejar el envío del formulario de REGISTRO
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Detiene el envío del formulario tradicional
         
-        // En este punto, deberías llamar a tu función fetch() para Apps Script.
-        // Por ahora, solo tenemos la alerta.
+        const form = e.target;
+        const data = {
+            action: 'registro', // La acción que espera tu Apps Script
+            payload: {
+                nombreCompleto: form['nombreCompleto'].value,
+                rut: form['rut'].value,
+                carrera: form['carrera'].value,
+                telefono: form['telefono'].value,
+                email: form['email-reg'].value,
+                password: form['password-reg'].value
+            }
+        };
+
+        // LLAMADA A LA API (Apps Script)
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Necesario para la conexión inicial con Apps Script
+            contentType: 'application/json',
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            // Nota: Con 'no-cors', el .json() o .text() fallará. 
+            // Debes cambiar 'no-cors' por 'cors' y ajustar la respuesta 
+            // en Apps Script para un entorno real. Por ahora, asumimos éxito.
+            document.getElementById('register-error').textContent = 'Registro enviado. Por favor, inicia sesión.';
+            form.reset();
+            setTimeout(() => showView('login-view'), 2000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('register-error').textContent = 'Error al intentar registrar. Intente nuevamente.';
+        });
     });
+
+    // Manejar el envío del formulario de INICIO DE SESIÓN
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const form = e.target;
+        const data = {
+            action: 'login',
+            payload: {
+                email: form['email-log'].value,
+                password: form['password-log'].value
+            }
+        };
+
+        // LLAMADA A LA API (Apps Script)
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Mismo problema de CORS que en el registro
+            contentType: 'application/json',
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            // En un caso real, aquí procesarías la respuesta JSON de tu Apps Script.
+            // Si el login es exitoso:
+            const docenteName = form['email-log'].value.split('@')[0]; // Simulación
+            document.getElementById('welcome-user').textContent = '👋 Hola, ' + docenteName + '!';
+            
+            // Guardar el email del usuario en el navegador para futuras solicitudes
+            localStorage.setItem('docenteEmail', form['email-log'].value); 
+            
+            form.reset();
+            showView('dashboard-view');
+        })
+        .catch(error => {
+            // Esto se ejecutaría si la petición falla completamente (no si el login es malo)
+            console.error('Error:', error);
+            document.getElementById('login-error').textContent = 'Error de conexión. Verifica la URL de la API.';
+        });
+
+        // NOTA: Para simular un error de login sin la API
+        // document.getElementById('login-error').textContent = 'Email o contraseña incorrectos.';
+    });
+
+    // Función para cerrar sesión
+    function logout() {
+        localStorage.removeItem('docenteEmail');
+        showView('welcome-view');
+    }
+
+    // Asegurarse de que al cargar, se vea la vista de bienvenida
+    document.addEventListener('DOMContentLoaded', () => {
+        showView('welcome-view');
+    });
+
 </script>
 
 </body>
