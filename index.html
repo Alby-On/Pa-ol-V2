@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Solicitudes - Acceso</title>
     <style>
-        /* Estilos básicos para que se vea ordenado */
+        /* Estilos básicos */
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .container { 
             background: white; 
@@ -35,11 +35,13 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 10px; /* Separación para botones */
+            margin-top: 10px;
         }
         button:hover { background-color: #0056b3; }
         .toggle-link { text-align: center; margin-top: 15px; }
-        .hidden { display: none !important; } /* Usamos !important para asegurar que oculte */
+        .hidden { display: none !important; } 
+        /* Estilo para marcar errores de validación */
+        .input-error { border: 2px solid red !important; }
     </style>
 </head>
 <body>
@@ -97,7 +99,7 @@
                 <input type="text" id="nombre" name="Nombre" required>
 
                 <label for="rut">RUT:</label>
-                <input type="text" id="rut" name="RUT" required>
+                <input type="text" id="rut" name="RUT" placeholder="Ej: 20500455-6" required>
 
                 <label for="carrera">Carrera:</label>
                 <select id="carrera" name="Carrera" required>
@@ -129,28 +131,77 @@
                 <a href="#" onclick="showLogin()">Iniciar Sesión</a>
             </p>
         </div>
-    </div> </div>
+    </div> 
+
+</div>
 
 <script>
-    // Muestra el Login/Registro y oculta la Bienvenida
+    // --- LÓGICA DE VALIDACIÓN DEL RUT ---
+    function validarRutFormato(rut) {
+        // Elimina espacios y puntos, y convierte a mayúsculas
+        rut = rut.replace(/\s+/g, '').replace(/\./g, '').toUpperCase(); 
+
+        // Expresión regular para el formato XX.XXX.XXX-X o X.XXX.XXX-X, sin puntos.
+        // Formato: 1 a 8 dígitos + guion + dígito verificador (0-9 o K)
+        // La expresión ^(\d{1,8})-([\dk])$ valida estrictamente el formato DÍGITOS-DV
+        const rutRegex = /^(\d{1,8})-([\dK])$/;
+
+        if (!rutRegex.test(rut)) {
+            // El formato es incorrecto
+            return false;
+        }
+
+        // Si solo se requiere la validación de formato, retornamos true.
+        // Si quisieras validación matemática del dígito verificador, el código sería mucho más largo.
+        return true;
+    }
+
+    // --- LÓGICA DE MANEJO DE VISTAS ---
+
     function showLoginRegister() {
         document.getElementById('welcome-view').classList.add('hidden');
         document.getElementById('auth-container').classList.remove('hidden');
-        // Aseguramos que solo se vea el Login al entrar
         showLogin(); 
     }
 
-    // Función para mostrar el formulario de Registro
     function showRegister() {
         document.getElementById('login-view').classList.add('hidden');
         document.getElementById('register-view').classList.remove('hidden');
     }
 
-    // Función para mostrar el formulario de Login
     function showLogin() {
         document.getElementById('login-view').classList.remove('hidden');
         document.getElementById('register-view').classList.add('hidden');
     }
+
+    // --- MANEJO DEL ENVÍO DEL FORMULARIO DE REGISTRO ---
+    const registroForm = document.getElementById('registroForm');
+    
+    registroForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Detener el envío por defecto
+
+        const rutInput = document.getElementById('rut');
+        const rutValue = rutInput.value;
+
+        // 1. Eliminar cualquier clase de error previa
+        rutInput.classList.remove('input-error');
+
+        // 2. Ejecutar la validación de formato
+        if (!validarRutFormato(rutValue)) {
+            alert('El RUT ingresado es inválido. Por favor, usa el formato: 20500455-6 (sin puntos).');
+            rutInput.classList.add('input-error'); // Marcar el campo en rojo
+            rutInput.focus();
+            return; // Detiene el proceso de envío
+        }
+
+        // --- AQUI VA LA LÓGICA DE ENVÍO AL GOOGLE APPS SCRIPT ---
+        // Si llegamos aquí, el formato es correcto y podemos enviar los datos.
+
+        alert('¡Formato de RUT correcto! Procediendo con el registro (Falta conectar con Google Sheet)');
+        
+        // En este punto, deberías llamar a tu función fetch() para Apps Script.
+        // Por ahora, solo tenemos la alerta.
+    });
 </script>
 
 </body>
